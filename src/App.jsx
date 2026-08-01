@@ -1,7 +1,19 @@
+import SearchBar from "./components/SearchBar";
+import ResultsList from "./components/ResultsList";
+import Pagination from "./components/Pagination";
+
 function App() {
   return (
     <>
-      <h1>Hello React!</h1>
+      <header>
+        <div className="header__container">
+          Film Axtarışı
+        </div>
+      </header>
+
+      <SearchBar />
+      <ResultsList />
+      <Pagination />
     </>
   );
 }
