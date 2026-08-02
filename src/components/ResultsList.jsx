@@ -1,13 +1,12 @@
 import Card from "./Card";
 
-function ResultsList() {
+function ResultsList({ movies }) {
   return (
     <>
       <div className="results-list">
-        <Card />
-        <Card />
-        <Card />
-        <Card />
+        {movies.map((movie) => (
+          <Card key={movie.imdbID} movie={movie} />
+        ))}
       </div>
     </>
   );
