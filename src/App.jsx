@@ -16,6 +16,8 @@ function App() {
   let [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
+    let controller = new AbortController();
+
     async function fetchMovies() {
       if(!debouncedSearch.trim()){
         setMovies([]);
@@ -28,7 +30,7 @@ function App() {
         setLoading(true);
         setError("");
 
-        let data = await getMovies(debouncedSearch, page);
+        let data = await getMovies(debouncedSearch, page, controller.signal);
 
         if(data.Response === "False"){
           setMovies([]);
@@ -41,6 +43,10 @@ function App() {
         }
       }
       catch (err){
+        if(err.name === "AbortError"){
+          return;
+        }
+
         setError("Xəta baş verdi.");
         setMovies([]);
         setTotalResults(0);
@@ -51,6 +57,10 @@ function App() {
     }
 
     fetchMovies();
+
+    return () => {
+      controller.abort();
+    };
   }, [debouncedSearch, page]);
 
   useEffect(() => {
