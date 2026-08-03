@@ -1,6 +1,17 @@
 import Card from "./Card";
 
-function ResultsList({ movies }) {
+function ResultsList({ movies, loading, error }) {
+  if (loading) {
+    return <h2 className="error">Yüklənir...</h2>;
+  }
+
+  if (error) {
+    return <h2 className="error">{error}</h2>;
+  }
+
+  if (movies.length === 0) {
+    return <h2 className="error">Film siyahısı boşdur!</h2>;
+  }
   return (
     <>
       <div className="results-list">
