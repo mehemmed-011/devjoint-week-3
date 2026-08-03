@@ -183,6 +183,11 @@ header {
   transform: translateY(0);
 }
 
+.pagination__prev:disabled,
+.pagination__next:disabled{
+  background-color: #6c6c6c;
+}
+
 .pagination__page {
   font-size: 20px;
   font-weight: 600;

@@ -12,12 +12,15 @@ function App() {
   let debouncedSearch = useDebounce(search, 500);
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState("");
+  let [page, setPage] = useState(1);
+  let [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
     async function fetchMovies() {
       if(!debouncedSearch.trim()){
         setMovies([]);
         setError("");
+        setTotalResults(0);
         return;
       }
 
@@ -25,19 +28,22 @@ function App() {
         setLoading(true);
         setError("");
 
-        let data = await getMovies(debouncedSearch);
+        let data = await getMovies(debouncedSearch, page);
 
         if(data.Response === "False"){
           setMovies([]);
           setError(data.Error);
+          setTotalResults(0);
         }
         else{
           setMovies(data.Search);
+          setTotalResults(Number(data.totalResults));
         }
       }
       catch (err){
         setError("Xəta baş verdi.");
         setMovies([]);
+        setTotalResults(0);
       }
       finally{
         setLoading(false);
@@ -45,6 +51,10 @@ function App() {
     }
 
     fetchMovies();
+  }, [debouncedSearch, page]);
+
+  useEffect(() => {
+    setPage(1);
   }, [debouncedSearch]);
   return (
     <>
@@ -54,7 +64,7 @@ function App() {
 
       <SearchBar search={search} setSearch={setSearch} />
       <ResultsList movies={movies} loading={loading} error={error} />
-      <Pagination />
+      <Pagination page={page} setPage={setPage} totalResults={totalResults} />
     </>
   );
 }
