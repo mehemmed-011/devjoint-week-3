@@ -102,7 +102,6 @@ header {
 
 .card__img--box {
   width: 100%;
-  /* height: 545px; */
   border-radius: 10px;
   overflow: hidden;
   background-color: #f1f5f9;
@@ -118,6 +117,11 @@ header {
 
 .card:hover .card__img {
   transform: scale(1.03);
+}
+
+.card__text--box{
+  width: 100%;
+  margin-top: auto;
 }
 
 .card__title {
