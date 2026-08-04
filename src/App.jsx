@@ -1,67 +1,16 @@
 import { useEffect, useState } from "react";
-import { getMovies } from "./services/api";
 import useDebounce from "./hooks/useDebounce";
+import useFetch from "./hooks/useFetch";
 
 import SearchBar from "./components/SearchBar";
 import ResultsList from "./components/ResultsList";
 import Pagination from "./components/Pagination";
 
 function App() {
-  let [movies, setMovies] = useState([]);
   let [search, setSearch] = useState("");
   let debouncedSearch = useDebounce(search, 500);
-  let [loading, setLoading] = useState(false);
-  let [error, setError] = useState("");
   let [page, setPage] = useState(1);
-  let [totalResults, setTotalResults] = useState(0);
-
-  useEffect(() => {
-    let controller = new AbortController();
-
-    async function fetchMovies() {
-      if(!debouncedSearch.trim()){
-        setMovies([]);
-        setError("");
-        setTotalResults(0);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError("");
-
-        let data = await getMovies(debouncedSearch, page, controller.signal);
-
-        if(data.Response === "False"){
-          setMovies([]);
-          setError(data.Error);
-          setTotalResults(0);
-        }
-        else{
-          setMovies(data.Search);
-          setTotalResults(Number(data.totalResults));
-        }
-      }
-      catch (err){
-        if(err.name === "AbortError"){
-          return;
-        }
-
-        setError("Xəta baş verdi.");
-        setMovies([]);
-        setTotalResults(0);
-      }
-      finally{
-        setLoading(false);
-      }
-    }
-
-    fetchMovies();
-
-    return () => {
-      controller.abort();
-    };
-  }, [debouncedSearch, page]);
+  let { movies, loading, error, totalResults } = useFetch(debouncedSearch, page);
 
   useEffect(() => {
     setPage(1);
